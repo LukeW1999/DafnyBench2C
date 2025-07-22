@@ -15,7 +15,7 @@ from src.utils.logger import get_logger
 logger = get_logger(__name__)
 
 def get_dafny_files(input_dir: Path, limit: int = None) -> List[Path]:
-    """获取Dafny文件列表"""
+    """Get Dafny file list"""
     dafny_files = list(input_dir.glob("**/*.dfy"))
     
     if limit:
@@ -26,9 +26,9 @@ def get_dafny_files(input_dir: Path, limit: int = None) -> List[Path]:
 def run_batch_conversion(batch_name: str, input_dir: Path, output_dir: Path, 
                         converter_type: str = "deepseek", limit: int = None,
                         resume: bool = True, reset_failed: bool = False):
-    """运行批量转换"""
+    """Run batch conversion"""
     
-    # 获取设置和API key
+    # Get settings and API key
     settings = get_settings()
     if not settings.api_key:
         if converter_type == "deepseek":
@@ -37,7 +37,7 @@ def run_batch_conversion(batch_name: str, input_dir: Path, output_dir: Path,
             api_key = getpass.getpass("Please enter your Claude API key: ")
         settings.api_key = api_key
     
-    # 创建转换服务
+    # Create conversion service
     service = ServiceFactory.create_conversion_service(
         converter_type=converter_type,
         validator_type='heuristic',
@@ -45,53 +45,53 @@ def run_batch_conversion(batch_name: str, input_dir: Path, output_dir: Path,
         save_results=True
     )
     
-    # 创建批处理管理器
+    # Create batch manager
     batch_manager = BatchManager(batch_name, output_dir)
     
-    # 获取Dafny文件
+    # Get Dafny files
     dafny_files = get_dafny_files(input_dir, limit)
     logger.info(f"Found {len(dafny_files)} Dafny files")
     
-    # 添加文件到批处理
+    # Add files to batch
     batch_manager.add_files(dafny_files)
     
-    # 重置失败的文件（如果需要）
+    # Reset failed files (if needed)
     if reset_failed:
         batch_manager.reset_failed_files()
     
-    # 显示初始进度
+    # Show initial progress
     batch_manager.print_progress()
     
-    # 获取待处理的文件
-    pending_files = batch_manager.get_pending_files()
+    # Get files to process
+    files_to_process = batch_manager.get_pending_files()
     
-    if not pending_files:
+    if not files_to_process:
         logger.info("No files to process!")
         return
     
-    logger.info(f"Starting batch conversion of {len(pending_files)} files")
+    logger.info(f"Starting batch conversion of {len(files_to_process)} files")
     
-    # 处理每个文件
-    for i, item in enumerate(pending_files, 1):
+    # Process each file
+    for i, item in enumerate(files_to_process, 1):
         input_file = Path(item.input_file)
         output_path = Path(item.output_dir)
         
-        logger.info(f"Processing file {i}/{len(pending_files)}: {input_file.name}")
+        logger.info(f"Processing file {i}/{len(files_to_process)}: {input_file.name}")
         logger.info(f"Output directory: {output_path}")
         
         try:
-            # 标记为运行中
+            # Mark as running
             batch_manager.mark_running(item.input_file)
             
-            # 运行转换
+            # Run conversion
             result = service.convert_single_file(input_file, output_path)
             
-            # 检查结果
+            # Check result
             if result.conversion.success:
                 validation_score = result.validation.score if result.validation else 0.0
                 test_success = result.testing.success if result.testing else False
                 
-                # 标记为完成
+                # Mark as completed
                 batch_manager.mark_completed(
                     item.input_file,
                     conversion_score=1.0 if result.conversion.success else 0.0,
@@ -102,7 +102,7 @@ def run_batch_conversion(batch_name: str, input_dir: Path, output_dir: Path,
                 
                 logger.info(f"✅ Completed: {input_file.name} (Score: {validation_score:.3f})")
             else:
-                # 标记为失败
+                # Mark as failed
                 batch_manager.mark_failed(
                     item.input_file,
                     error_message=result.conversion.error_message or "Unknown error",
@@ -112,7 +112,7 @@ def run_batch_conversion(batch_name: str, input_dir: Path, output_dir: Path,
                 logger.error(f"❌ Failed: {input_file.name} - {result.conversion.error_message}")
         
         except Exception as e:
-            # 标记为失败
+            # Mark as failed
             batch_manager.mark_failed(
                 item.input_file,
                 error_message=str(e),
@@ -121,22 +121,22 @@ def run_batch_conversion(batch_name: str, input_dir: Path, output_dir: Path,
             
             logger.error(f"❌ Exception: {input_file.name} - {str(e)}")
         
-        # 每处理5个文件显示一次进度
-        if i % 5 == 0 or i == len(pending_files):
+        # Show progress every 5 files
+        if i % 5 == 0 or i == len(files_to_process):
             batch_manager.print_progress()
     
-    # 显示最终进度
+    # Show final progress
     batch_manager.print_progress()
     
-    # 导出详细结果
+    # Export detailed results
     detailed_results = batch_manager.export_detailed_results()
     logger.info(f"Detailed results exported to: {detailed_results}")
     
-    # 创建README文件
+    # Create README file
     readme_path = batch_manager.create_readme()
     logger.info(f"README created at: {readme_path}")
     
-    # 显示最终统计
+    # Show final statistics
     print(f"\n🎉 Batch conversion completed!")
     print(f"📁 Results saved to: {output_dir}")
     print(f"📊 Summary: {detailed_results}")
@@ -144,7 +144,7 @@ def run_batch_conversion(batch_name: str, input_dir: Path, output_dir: Path,
 
 def main():
     parser = argparse.ArgumentParser(description="Batch Dafny to C conversion with progress tracking")
-    parser.add_argument("--input-dir", type=Path, default="DafnyBench/dataset/ground_truth",
+    parser.add_argument("--input-dir", type=Path, default="DafnyBench/DafnyBench/dataset/ground_truth",
                        help="Input directory containing Dafny files")
     parser.add_argument("--output-dir", type=Path, default="batch_results",
                        help="Output directory for results")
@@ -161,12 +161,12 @@ def main():
     
     args = parser.parse_args()
     
-    # 验证输入目录
+    # Validate input directory
     if not args.input_dir.exists():
         logger.error(f"Input directory does not exist: {args.input_dir}")
         return
     
-    # 运行批量转换
+    # Run batch conversion
     run_batch_conversion(
         batch_name=args.batch_name,
         input_dir=args.input_dir,

@@ -19,13 +19,13 @@ Convert a single Dafny file to C with ACSL annotations:
 ```bash
 # Basic conversion with DeepSeek
 python main.py convert \
-  --input DafnyBench/dataset/ground_truth/Clover_abs.dfy \
+  --input DafnyBench/DafnyBench/dataset/ground_truth/Clover_abs.dfy \
   --output converted_output \
   --converter deepseek
 
 # Using Claude model
 python main.py convert \
-  --input DafnyBench/dataset/ground_truth/Clover_abs.dfy \
+  --input DafnyBench/DafnyBench/dataset/ground_truth/Clover_abs.dfy \
   --output converted_output \
   --converter claude \
   --model claude-3-opus
@@ -53,7 +53,7 @@ python main.py convert \
 python batch_convert.py \
   --limit 10 \
   --batch-name "experiment_1" \
-  --input-dir DafnyBench/dataset/ground_truth \
+  --input-dir DafnyBench/DafnyBench/dataset/ground_truth \
   --output-dir batch_results
 
 # Process with specific converter
@@ -61,7 +61,7 @@ python batch_convert.py \
   --limit 50 \
   --batch-name "claude_test" \
   --converter claude \
-  --input-dir DafnyBench/dataset/ground_truth
+  --input-dir DafnyBench/DafnyBench/dataset/ground_truth
 ```
 
 ### Batch Command Options
@@ -70,7 +70,7 @@ python batch_convert.py \
 |--------|-------------|---------|
 | `--limit` | Number of files to process | 10 |
 | `--batch-name` | Batch identifier | batch_001 |
-| `--input-dir` | Input directory | DafnyBench/dataset/ground_truth |
+| `--input-dir` | Input directory | DafnyBench/DafnyBench/dataset/ground_truth |
 | `--output-dir` | Output directory | batch_results |
 | `--converter` | AI model | deepseek |
 | `--resume` | Resume from previous run | True |

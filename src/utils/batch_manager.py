@@ -14,7 +14,7 @@ logger = get_logger(__name__)
 
 @dataclass
 class BatchItem:
-    """单个批处理项目"""
+    """Single batch processing item"""
     input_file: str
     output_dir: str
     status: str = "pending"  # pending, running, completed, failed, skipped
@@ -28,14 +28,14 @@ class BatchItem:
     notes: str = ""
 
 class BatchManager:
-    """批量处理管理器"""
+    """Batch processing manager"""
     
     def __init__(self, batch_name: str, output_dir: Path):
         self.batch_name = batch_name
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         
-        # 创建清晰的目录结构
+        # Create clear directory structure
         self.results_dir = self.output_dir / "results"
         self.converted_dir = self.output_dir / "converted"
         self.reports_dir = self.output_dir / "reports"
@@ -43,27 +43,27 @@ class BatchManager:
         for dir_path in [self.results_dir, self.converted_dir, self.reports_dir]:
             dir_path.mkdir(exist_ok=True)
         
-        # 进度文件路径
+        # Progress file path
         self.progress_file = self.reports_dir / f"{batch_name}_progress.json"
         self.summary_file = self.reports_dir / f"{batch_name}_summary.csv"
         
-        # 加载或初始化进度
+        # Load or initialize progress
         self.items: List[BatchItem] = []
         self.completed_files: Set[str] = set()
         self.load_progress()
     
     def get_output_path_for_file(self, input_file: Path) -> Path:
-        """为单个文件生成清晰的输出路径"""
-        # 使用原始文件名作为目录名，避免过长的路径
+        """Generate clear output path for a single file"""
+        # Use original filename as directory name to avoid long paths
         safe_name = input_file.stem.replace("_tmp_tmp", "_").replace("tmp_", "")
-        # 限制长度，避免路径过长
+        # Limit length to avoid long paths
         if len(safe_name) > 50:
             safe_name = safe_name[:47] + "..."
         
         return self.converted_dir / safe_name
     
     def add_files(self, input_files: List[Path], output_subdir: str = None):
-        """添加文件到批处理列表"""
+        """Add files to the batch list"""
         for input_file in input_files:
             output_path = self.get_output_path_for_file(input_file)
             
@@ -72,7 +72,7 @@ class BatchManager:
                 output_dir=str(output_path)
             )
             
-            # 检查是否已经处理过
+            # Check if already processed
             if item.input_file in self.completed_files:
                 item.status = "completed"
                 logger.info(f"File {input_file.name} already completed, skipping")
@@ -85,19 +85,19 @@ class BatchManager:
         self.save_progress()
     
     def get_pending_files(self) -> List[BatchItem]:
-        """获取待处理的文件"""
+        """Get pending files"""
         return [item for item in self.items if item.status == "pending"]
     
     def get_completed_files(self) -> List[BatchItem]:
-        """获取已完成的文件"""
+        """Get completed files"""
         return [item for item in self.items if item.status == "completed"]
     
     def get_failed_files(self) -> List[BatchItem]:
-        """获取失败的文件"""
+        """Get failed files"""
         return [item for item in self.items if item.status == "failed"]
     
     def mark_running(self, input_file: str):
-        """标记文件为运行中"""
+        """Mark file as running"""
         for item in self.items:
             if item.input_file == input_file:
                 item.status = "running"
@@ -108,7 +108,7 @@ class BatchManager:
     def mark_completed(self, input_file: str, conversion_score: float, 
                       validation_score: float, test_success: bool, 
                       error_message: str = None, notes: str = ""):
-        """标记文件为已完成"""
+        """Mark file as completed"""
         for item in self.items:
             if item.input_file == input_file:
                 item.status = "completed"
@@ -123,7 +123,7 @@ class BatchManager:
         self.save_progress()
     
     def mark_failed(self, input_file: str, error_message: str, notes: str = ""):
-        """标记文件为失败"""
+        """Mark file as failed"""
         for item in self.items:
             if item.input_file == input_file:
                 item.status = "failed"
@@ -135,7 +135,7 @@ class BatchManager:
         self.save_progress()
     
     def mark_skipped(self, input_file: str, reason: str):
-        """标记文件为跳过"""
+        """Mark file as skipped"""
         for item in self.items:
             if item.input_file == input_file:
                 item.status = "skipped"
@@ -145,7 +145,7 @@ class BatchManager:
         self.save_progress()
     
     def reset_failed_files(self):
-        """重置失败的文件为待处理状态"""
+        """Reset failed files to pending status"""
         for item in self.items:
             if item.status == "failed":
                 item.status = "pending"
@@ -157,7 +157,7 @@ class BatchManager:
         logger.info("Reset all failed files to pending status")
     
     def get_progress_summary(self) -> Dict[str, Any]:
-        """获取进度摘要"""
+        """Get progress summary"""
         total = len(self.items)
         completed = len(self.get_completed_files())
         failed = len(self.get_failed_files())
@@ -165,7 +165,7 @@ class BatchManager:
         running = len([item for item in self.items if item.status == "running"])
         skipped = len([item for item in self.items if item.status == "skipped"])
         
-        # 计算平均分数
+        # Calculate average scores
         completed_items = self.get_completed_files()
         avg_conversion_score = 0.0
         avg_validation_score = 0.0
@@ -196,7 +196,7 @@ class BatchManager:
         }
     
     def print_progress(self):
-        """打印进度信息"""
+        """Print progress information"""
         summary = self.get_progress_summary()
         
         print(f"\n{'='*60}")
@@ -220,8 +220,8 @@ class BatchManager:
         print(f"{'='*60}\n")
     
     def save_progress(self):
-        """保存进度到文件"""
-        # 保存JSON格式的详细进度
+        """Save progress to file"""
+        # Save detailed progress in JSON format
         progress_data = {
             "batch_name": self.batch_name,
             "last_updated": datetime.now().isoformat(),
@@ -231,7 +231,7 @@ class BatchManager:
         with open(self.progress_file, 'w', encoding='utf-8') as f:
             json.dump(progress_data, f, indent=2, ensure_ascii=False)
         
-        # 保存CSV格式的摘要
+        # Save summary in CSV format
         summary = self.get_progress_summary()
         with open(self.summary_file, 'w', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
@@ -242,7 +242,7 @@ class BatchManager:
         logger.info(f"Progress saved to {self.progress_file}")
     
     def load_progress(self):
-        """从文件加载进度"""
+        """Load progress from file"""
         if self.progress_file.exists():
             try:
                 with open(self.progress_file, 'r', encoding='utf-8') as f:
@@ -260,7 +260,7 @@ class BatchManager:
             logger.info(f"No existing progress file found, starting fresh batch '{self.batch_name}'")
     
     def export_detailed_results(self, output_file: str = None) -> Path:
-        """导出详细结果到CSV"""
+        """Export detailed results to CSV"""
         if output_file is None:
             output_file = f"{self.batch_name}_detailed_results.csv"
         

@@ -1,46 +1,44 @@
-# DafnyBench2C: Dafny to C Conversion Tool
+# DafnyBench2C: AI-Powered Dafny to C Conversion Tool
 
-A comprehensive tool for converting Dafny formal verification code to C with ACSL annotations, featuring AI-powered conversion, automated testing, and heuristic validation.
+A comprehensive tool for converting Dafny programs to C with formal verification annotations (ACSL), featuring AI model support, automated testing, and detailed validation.
 
 ## 🚀 Features
 
-- **AI-Powered Conversion**: Uses DeepSeek or Claude AI models for intelligent Dafny-to-C conversion
-- **ACSL Annotation Preservation**: Maintains formal verification contracts from Dafny to C
-- **Automated Testing**: Generates and runs test cases for converted C code
-- **Heuristic Validation**: Rule-based scoring system for conversion quality assessment
-- **Batch Processing**: Handle large datasets with progress tracking and resume capability
-- **Detailed Reporting**: Comprehensive results in JSON and CSV formats
+- **AI-Powered Conversion**: Support for Claude and DeepSeek models
+- **Formal Verification**: ACSL annotations for C programs
+- **Automated Testing**: Compilation and execution testing
+- **Heuristic Validation**: Rule-based conversion quality assessment
+- **Batch Processing**: Handle multiple files with progress tracking
+- **Detailed Reporting**: Comprehensive results and analysis
 
-## 📋 Requirements
+## 📋 Prerequisites
 
 - Python 3.8+
 - GCC compiler
-- DeepSeek API key or Claude API key
+- API keys for AI models (Claude or DeepSeek)
 
 ## 🛠️ Installation
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/DafnyBench2C.git
+   git clone <your-repo-url>
    cd DafnyBench2C
    ```
 
-2. **Create virtual environment**:
+2. **Initialize and update submodules**:
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   git submodule update --init --recursive
    ```
+   
+   The project uses the DafnyBench dataset as a git submodule:
+   - `DafnyBench/DafnyBench/dataset/ground_truth/`: Original Dafny files with hints
+   - `DafnyBench/DafnyBench/dataset/hints_removed/`: Dafny files with hints removed
+   - `DafnyBench/DafnyBench/dataset/metadata.json`: Dataset metadata
+   - `DafnyBench/DafnyBench/dataset/test.json`: Test configuration
 
 3. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
-   ```
-
-4. **Set up API key**:
-   ```bash
-   export DEEPSEEK_API_KEY="your_api_key_here"
-   # or
-   export CLAUDE_API_KEY="your_api_key_here"
    ```
 
 ## 🎯 Quick Start
@@ -48,107 +46,90 @@ A comprehensive tool for converting Dafny formal verification code to C with ACS
 ### Single File Conversion
 
 ```bash
-# Convert a single Dafny file
-python main.py convert --input DafnyBench/dataset/ground_truth/Clover_abs.dfy --output converted_output --converter deepseek
+python main.py --input DafnyBench/DafnyBench/dataset/ground_truth/Clover_binary_search.dfy --converter claude
 ```
 
 ### Batch Processing
 
 ```bash
-# Process 10 files with progress tracking
-python batch_convert.py --limit 10 --batch-name "test_batch"
-
-# Process more files
-python batch_convert.py --limit 50 --batch-name "large_batch"
+python batch_convert.py --input-dir DafnyBench/DafnyBench/dataset/ground_truth --converter deepseek
 ```
 
 ## 📁 Project Structure
 
 ```
 DafnyBench2C/
-├── src/
-│   ├── core/
-│   │   ├── converters/     # AI model converters
-│   │   ├── validators/     # Validation logic
-│   │   ├── testers/        # Testing framework
-│   │   └── services/       # Service orchestration
-│   ├── config/             # Configuration management
-│   ├── interfaces/         # Abstract interfaces
-│   └── utils/              # Utility functions
-├── DafnyBench/             # Dafny dataset
-├── batch_results/          # Batch processing results
-├── main.py                 # Single file conversion CLI
-├── batch_convert.py        # Batch processing script
-└── README.md
+├── src/                    # Core source code
+│   ├── config/            # Configuration management
+│   ├── core/              # Main conversion logic
+│   │   ├── converters/    # AI model converters
+│   │   ├── services/      # Business logic services
+│   │   ├── testers/       # Testing components
+│   │   └── validators/    # Validation components
+│   ├── interfaces/        # Abstract interfaces
+│   └── utils/             # Utility functions
+├── DafnyBench/            # Dataset (git submodule)
+│   ├── dataset/
+│   │   ├── ground_truth/  # Original Dafny files
+│   │   └── hints_removed/ # Files without hints
+│   └── metadata/          # Dataset metadata
+├── results/               # Conversion results
+├── main.py               # Single file conversion
+├── batch_convert.py      # Batch processing
+└── requirements.txt      # Python dependencies
 ```
 
-## 🔧 Configuration
+## ⚙️ Configuration
 
-### Supported Converters
-
-- **DeepSeek**: `deepseek-chat` model (recommended)
-- **Claude**: `claude-3-opus`, `claude-3-sonnet`, `claude-3-haiku`
-
-### Validation Rules
-
-The system evaluates conversion quality based on:
-- **Function Signatures** (25%): Method name preservation
-- **ACSL Annotations** (35%): Contract clause conversion
-- **Tests Passed** (40%): Compilation and execution success
-
-## 📊 Output Structure
-
-Batch processing creates a clear directory structure:
-
-```
-batch_results/
-├── converted/              # Converted C code files
-│   ├── file1/             # Each Dafny file gets its own directory
-│   │   ├── main.c         # Converted C code
-│   │   └── test.c         # Generated test file
-│   └── file2/
-├── reports/               # Progress and statistics
-│   ├── batch_progress.json
-│   ├── batch_summary.csv
-│   └── detailed_results.csv
-└── README.md              # Batch-specific documentation
-```
-
-## 🚀 Advanced Usage
-
-### Resume Interrupted Batch
+### Environment Variables
 
 ```bash
-# Continue from where you left off
-python batch_convert.py --batch-name "test_batch"
+export CLAUDE_API_KEY="your-claude-key"
+export DEEPSEEK_API_KEY="your-deepseek-key"
 ```
 
-### Reset Failed Files
+### Configuration Files
 
-```bash
-# Retry failed conversions
-python batch_convert.py --batch-name "test_batch" --reset-failed
-```
+- `src/config/settings.py`: Global settings
+- `src/config/models.py`: AI model configurations
 
-### Different Converter
-
-```bash
-# Use Claude instead of DeepSeek
-python batch_convert.py --converter claude --limit 10
-```
-
-## 📈 Results Interpretation
+## 📊 Output Interpretation
 
 ### Validation Scores
 
-- **0.0-0.5**: Poor conversion quality
-- **0.5-0.8**: Good conversion quality
-- **0.8-1.0**: Excellent conversion quality
+- **Function Signatures (25%)**: Parameter and return type matching
+- **ACSL Annotations (35%)**: Formal specification conversion quality
+- **Tests Passed (40%)**: Compilation and execution success rate
 
-### Test Results
+### Result Files
 
-- **True**: Tests compiled and executed successfully
-- **False**: Compilation or execution failed
+- `converted/`: Generated C files
+- `reports/`: Detailed analysis reports
+- `results/`: JSON and CSV result summaries
+
+## 🔧 Advanced Usage
+
+### Custom Converters
+
+```python
+from src.core.converters.converter_factory import ConverterFactory
+
+converter = ConverterFactory.create_converter('claude', api_key='your-key')
+result = converter.convert_dafny_to_c(dafny_code)
+```
+
+### Batch Processing Options
+
+```bash
+# Resume interrupted batch
+python batch_convert.py --resume
+
+# Reset failed conversions
+python batch_convert.py --reset-failed
+
+# Custom output directory
+python batch_convert.py --output-dir ./my_results
+```
 
 ## 🤝 Contributing
 
@@ -164,12 +145,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- DafnyBench dataset for providing the Dafny code samples
-- DeepSeek and Anthropic for AI model APIs
-- The formal verification community for inspiration
+- **DafnyBench Dataset**: This project uses the [DafnyBench](https://github.com/sun-wendy/DafnyBench) dataset as a git submodule for evaluation and testing purposes.
+- **Claude API**: Powered by Anthropic's Claude models
+- **DeepSeek API**: Powered by DeepSeek's AI models
 
 ## 📞 Support
 
-For issues and questions:
-- Open an issue on GitHub
-- Check the [USAGE.md](USAGE.md) for detailed usage examples
+For questions and support, please open an issue on GitHub.
+
+---
+
+**Note**: The DafnyBench dataset is included as a git submodule. If you clone this repository, make sure to run `git submodule update --init --recursive` to download the dataset files.

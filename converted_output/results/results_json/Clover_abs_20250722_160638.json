@@ -1,0 +1,70 @@
+{
+  "timestamp": "2025-07-22T16:06:38.028154",
+  "conversion": {
+    "success": true,
+    "error_message": null,
+    "metadata": {
+      "model_used": "deepseek-chat",
+      "self_review_enabled": true,
+      "test_generation_enabled": true
+    }
+  },
+  "validation": {
+    "score": 1.0,
+    "is_valid": true,
+    "details": [
+      "Total score: 1.000"
+    ],
+    "issues": [],
+    "metadata": {
+      "detailed_scores": {
+        "function_signatures": 1.0,
+        "acsl_annotations": 1.0,
+        "tests_passed": 1.0
+      },
+      "validation_reasons": {
+        "function_signatures": {
+          "score": 1.0,
+          "reasons": [
+            "Method 'Abs' preserved",
+            "All function signatures perfectly preserved"
+          ],
+          "dafny_methods": [
+            "Abs"
+          ],
+          "c_functions": [
+            "Abs"
+          ]
+        },
+        "acsl_annotations": {
+          "score": 1.0,
+          "reasons": [
+            "Ensures: 3/1 converted",
+            "Bonus: ACSL annotations present"
+          ],
+          "dafny_contracts": 1,
+          "c_acsl_blocks": 1,
+          "dafny_requires": 0,
+          "dafny_ensures": 1
+        },
+        "tests_passed": {
+          "score": 1.0,
+          "reasons": [
+            "Tests passed successfully"
+          ]
+        }
+      }
+    }
+  },
+  "testing": {
+    "success": true,
+    "output": "All tests passed!",
+    "error": null,
+    "metadata": {}
+  },
+  "metadata": {
+    "input_file": "DafnyBench/DafnyBench/dataset/ground_truth/Clover_abs.dfy",
+    "output_dir": "converted_output",
+    "test_dir": "test_cases"
+  }
+}
