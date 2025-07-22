@@ -1,0 +1,3 @@
+[submodule "DafnyBench"]
+	path = DafnyBench
+	url = https://github.com/sun-wendy/DafnyBench.git
