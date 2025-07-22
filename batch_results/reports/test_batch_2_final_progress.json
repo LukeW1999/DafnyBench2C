@@ -1,0 +1,32 @@
+{
+  "batch_name": "test_batch_2_final",
+  "last_updated": "2025-07-22T15:24:53.017594",
+  "items": [
+    {
+      "input_file": "DafnyBench/dataset/ground_truth/dafny-synthesis_task_id_477.dfy",
+      "output_dir": "batch_results/converted/dafny-synthesis_task_id_477",
+      "status": "completed",
+      "conversion_score": 1.0,
+      "validation_score": 0.55,
+      "test_success": false,
+      "error_message": null,
+      "start_time": "2025-07-22T15:22:37.489837",
+      "end_time": "2025-07-22T15:23:52.161705",
+      "retry_count": 0,
+      "notes": "Successfully converted with validation score 0.550"
+    },
+    {
+      "input_file": "DafnyBench/dataset/ground_truth/dafny-programs_tmp_tmpcwodh6qh_src_expt.dfy",
+      "output_dir": "batch_results/converted/dafny-programs_cwodh6qh_src_expt",
+      "status": "completed",
+      "conversion_score": 1.0,
+      "validation_score": 1.0,
+      "test_success": true,
+      "error_message": null,
+      "start_time": "2025-07-22T15:23:52.162052",
+      "end_time": "2025-07-22T15:24:53.017589",
+      "retry_count": 0,
+      "notes": "Successfully converted with validation score 1.000"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "timestamp": "2025-07-22T15:23:52.161295",
+  "conversion": {
+    "success": true,
+    "error_message": null,
+    "metadata": {
+      "model_used": "deepseek-chat",
+      "self_review_enabled": true,
+      "test_generation_enabled": true
+    }
+  },
+  "validation": {
+    "score": 0.55,
+    "is_valid": true,
+    "details": [
+      "Total score: 0.550"
+    ],
+    "issues": [],
+    "metadata": {
+      "detailed_scores": {
+        "function_signatures": 0.0,
+        "acsl_annotations": 1.0,
+        "tests_passed": 0.5
+      },
+      "validation_reasons": {
+        "function_signatures": {
+          "score": 0.0,
+          "reasons": [
+            "Method 'ToLowercase' not found in C code",
+            "Poor preservation: 0/1 methods"
+          ],
+          "dafny_methods": [
+            "ToLowercase"
+          ],
+          "c_functions": [
+            "Shift32"
+          ]
+        },
+        "acsl_annotations": {
+          "score": 1.0,
+          "reasons": [
+            "Ensures: 4/1 converted",
+            "Bonus: ACSL annotations present"
+          ],
+          "dafny_contracts": 1,
+          "c_acsl_blocks": 5,
+          "dafny_requires": 0,
+          "dafny_ensures": 1
+        },
+        "tests_passed": {
+          "score": 0.5,
+          "reasons": [
+            "Tests failed or partially passed"
+          ]
+        }
+      }
+    }
+  },
+  "testing": {
+    "success": false,
+    "output": null,
+    "error": "batch_results/converted/dafny-synthesis_task_id_477/test_dafny-synthesis_task_id_477.c:28:27: error: call to undeclared function 'IsUpperCase'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]\n   28 |         if (i < length && IsUpperCase(s[i])) {\n      |                           ^\n1 error generated.",
+    "metadata": {}
+  },
+  "metadata": {
+    "input_file": "DafnyBench/dataset/ground_truth/dafny-synthesis_task_id_477.dfy",
+    "output_dir": "batch_results/converted/dafny-synthesis_task_id_477",
+    "test_dir": "batch_results/converted/dafny-synthesis_task_id_477"
+  }
+}

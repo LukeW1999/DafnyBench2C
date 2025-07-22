@@ -1,87 +1,175 @@
-# DafnyBench: A Benchmark for Formal Software Verification
+# DafnyBench2C: Dafny to C Conversion Tool
 
-Dataset & code for our paper [DafnyBench: A Benchmark for Formal Software Verification](https://arxiv.org/abs/2406.08467)
-<br>
+A comprehensive tool for converting Dafny formal verification code to C with ACSL annotations, featuring AI-powered conversion, automated testing, and heuristic validation.
 
-Dataset is also available for [download on 🤗 Hugging Face](https://huggingface.co/datasets/wendy-sun/DafnyBench).
-<br><br>
+## 🚀 Features
 
-## Overview 📊
+- **AI-Powered Conversion**: Uses DeepSeek or Claude AI models for intelligent Dafny-to-C conversion
+- **ACSL Annotation Preservation**: Maintains formal verification contracts from Dafny to C
+- **Automated Testing**: Generates and runs test cases for converted C code
+- **Heuristic Validation**: Rule-based scoring system for conversion quality assessment
+- **Batch Processing**: Handle large datasets with progress tracking and resume capability
+- **Detailed Reporting**: Comprehensive results in JSON and CSV formats
 
-DafnyBench is the largest benchmark of its kind for training and evaluating machine learning systems for formal software verification, with over 750 Dafny programs.
-<br><br>
+## 📋 Requirements
 
+- Python 3.8+
+- GCC compiler
+- DeepSeek API key or Claude API key
 
-## Usage 💻
+## 🛠️ Installation
 
-- <b>Dataset</b>: The dataset for DafnyBench (with 782 programs) could be found in the `DafnyBench` directory, which contains the `ground_truth` set & the `hints_removed`set (with compiler hints, i.e. annoataions, removed).
-- <b>Evaluation</b>: Evaluate LLMs on DafnyBench by asking models to fill in missing hints in a test file from the `hints_removed` set and checking if the reconstructed program could be verified by Dafny. Please refer to the `eval` directory.
-<br>
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/DafnyBench2C.git
+   cd DafnyBench2C
+   ```
 
+2. **Create virtual environment**:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
 
-<p align="center">
-  <img src="assets/task_overview.png" width="600px"/>
-</p>
-<br><br>
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
+4. **Set up API key**:
+   ```bash
+   export DEEPSEEK_API_KEY="your_api_key_here"
+   # or
+   export CLAUDE_API_KEY="your_api_key_here"
+   ```
 
+## 🎯 Quick Start
 
-## Set Up for Evaluation 🔧
+### Single File Conversion
 
-1. Install Dafny on your machine by following [this tutorial](https://dafny.org/dafny/Installation)
-2. Clone & `cd` into this repository
-3. Set up environment by running the following lines:
+```bash
+# Convert a single Dafny file
+python main.py convert --input DafnyBench/dataset/ground_truth/Clover_abs.dfy --output converted_output --converter deepseek
 ```
-python -m venv stats
-source stats/bin/activate
-pip install -r requirements.txt
-cd eval
-```
-4. Set up environment variable for the root directory:
-```
-export DAFNYBENCH_ROOT=
-```
-5. Set up environment variable for path to Dafny executable on your machine (for example, `/opt/homebrew/bin/Dafny`):
-```
-export DAFNY_PATH=
-```
-6. If you're evaluating an LLM through API access, set up API key. For example:
-```
-export OPENAI_API_KEY=
-```
-7. You can choose to evaluate an LLM on a single test program, such as:
-```
-python fill_hints.py --model "gpt-4o" --test_file "Clover_abs_no_hints.dfy" --feedback_turn 3 --dafny_path "$DAFNY_PATH"
-```
-or evaluate on the entire dataset:
-```
-export model_to_eval='gpt-4o'
-./run_eval.sh
-```
-<br>
 
+### Batch Processing
 
-## Contents 📁
+```bash
+# Process 10 files with progress tracking
+python batch_convert.py --limit 10 --batch-name "test_batch"
 
-- `DafnyBench`
-  - A collection of 782 Dafny programs. Each program has a `ground_truth` version that is fully verified with Dafny & a `hints_removed` version that has hints (i.e. annotations) removed
-- `eval`
-  - Contains scripts to evaluate LLMs on DafnyBench
-- `results`
-  - `results_summary` - Dataframes that summarize LLMs' success on every test program
-  - `reconstructed_files` - LLM outputs with hints filled back in
-  - `analysis` - Contains a notebook for analyzing the results
-
-<br><br>
-
-
-## Citation 📎
-
-```bibtex
-@article{loughridge2024dafnybench,
-         title={DafnyBench: A Benchmark for Formal Software Verification}, 
-         author={Chloe Loughridge and Qinyi Sun and Seth Ahrenbach and Federico Cassano and Chuyue Sun and Ying Sheng and Anish Mudide and Md Rakib Hossain Misu and Nada Amin and Max Tegmark},
-         year={2024},
-         journal={arXiv preprint arXiv:2406.08467}
-}
+# Process more files
+python batch_convert.py --limit 50 --batch-name "large_batch"
 ```
+
+## 📁 Project Structure
+
+```
+DafnyBench2C/
+├── src/
+│   ├── core/
+│   │   ├── converters/     # AI model converters
+│   │   ├── validators/     # Validation logic
+│   │   ├── testers/        # Testing framework
+│   │   └── services/       # Service orchestration
+│   ├── config/             # Configuration management
+│   ├── interfaces/         # Abstract interfaces
+│   └── utils/              # Utility functions
+├── DafnyBench/             # Dafny dataset
+├── batch_results/          # Batch processing results
+├── main.py                 # Single file conversion CLI
+├── batch_convert.py        # Batch processing script
+└── README.md
+```
+
+## 🔧 Configuration
+
+### Supported Converters
+
+- **DeepSeek**: `deepseek-chat` model (recommended)
+- **Claude**: `claude-3-opus`, `claude-3-sonnet`, `claude-3-haiku`
+
+### Validation Rules
+
+The system evaluates conversion quality based on:
+- **Function Signatures** (25%): Method name preservation
+- **ACSL Annotations** (35%): Contract clause conversion
+- **Tests Passed** (40%): Compilation and execution success
+
+## 📊 Output Structure
+
+Batch processing creates a clear directory structure:
+
+```
+batch_results/
+├── converted/              # Converted C code files
+│   ├── file1/             # Each Dafny file gets its own directory
+│   │   ├── main.c         # Converted C code
+│   │   └── test.c         # Generated test file
+│   └── file2/
+├── reports/               # Progress and statistics
+│   ├── batch_progress.json
+│   ├── batch_summary.csv
+│   └── detailed_results.csv
+└── README.md              # Batch-specific documentation
+```
+
+## 🚀 Advanced Usage
+
+### Resume Interrupted Batch
+
+```bash
+# Continue from where you left off
+python batch_convert.py --batch-name "test_batch"
+```
+
+### Reset Failed Files
+
+```bash
+# Retry failed conversions
+python batch_convert.py --batch-name "test_batch" --reset-failed
+```
+
+### Different Converter
+
+```bash
+# Use Claude instead of DeepSeek
+python batch_convert.py --converter claude --limit 10
+```
+
+## 📈 Results Interpretation
+
+### Validation Scores
+
+- **0.0-0.5**: Poor conversion quality
+- **0.5-0.8**: Good conversion quality
+- **0.8-1.0**: Excellent conversion quality
+
+### Test Results
+
+- **True**: Tests compiled and executed successfully
+- **False**: Compilation or execution failed
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- DafnyBench dataset for providing the Dafny code samples
+- DeepSeek and Anthropic for AI model APIs
+- The formal verification community for inspiration
+
+## 📞 Support
+
+For issues and questions:
+- Open an issue on GitHub
+- Check the [USAGE.md](USAGE.md) for detailed usage examples

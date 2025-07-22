@@ -3,6 +3,23 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Temporary files
+tmp/
+*.tmp
+*.temp
+
+# macOS
+.DS_Store
+
+# Test results
+*_results.csv
+
+# Output directories
+converted_c/
+converted_c_with_tests/
+test_cases/
+test_cases_with_tests/
+
 # C extensions
 *.so
 

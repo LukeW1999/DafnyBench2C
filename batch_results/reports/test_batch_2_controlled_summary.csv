@@ -1,0 +1,13 @@
+Metric,Value
+batch_name,test_batch_2_controlled
+total_files,2
+completed,0
+failed,2
+pending,0
+running,0
+skipped,0
+completion_rate,0.0
+avg_conversion_score,0.0
+avg_validation_score,0.0
+test_success_rate,0.0
+last_updated,2025-07-22T15:22:10.323039

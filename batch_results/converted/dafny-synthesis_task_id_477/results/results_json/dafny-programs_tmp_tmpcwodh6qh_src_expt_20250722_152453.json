@@ -1,0 +1,73 @@
+{
+  "timestamp": "2025-07-22T15:24:53.017200",
+  "conversion": {
+    "success": true,
+    "error_message": null,
+    "metadata": {
+      "model_used": "deepseek-chat",
+      "self_review_enabled": true,
+      "test_generation_enabled": true
+    }
+  },
+  "validation": {
+    "score": 1.0,
+    "is_valid": true,
+    "details": [
+      "Total score: 1.000"
+    ],
+    "issues": [],
+    "metadata": {
+      "detailed_scores": {
+        "function_signatures": 1.0,
+        "acsl_annotations": 1.0,
+        "tests_passed": 1.0
+      },
+      "validation_reasons": {
+        "function_signatures": {
+          "score": 1.0,
+          "reasons": [
+            "Method 'expt' preserved",
+            "All function signatures perfectly preserved"
+          ],
+          "dafny_methods": [
+            "expt"
+          ],
+          "c_functions": [
+            "Expt",
+            "expt",
+            "distributive"
+          ]
+        },
+        "acsl_annotations": {
+          "score": 1.0,
+          "reasons": [
+            "Requires: 3/1 converted",
+            "Ensures: 3/1 converted",
+            "Bonus: ACSL annotations present"
+          ],
+          "dafny_contracts": 2,
+          "c_acsl_blocks": 4,
+          "dafny_requires": 1,
+          "dafny_ensures": 1
+        },
+        "tests_passed": {
+          "score": 1.0,
+          "reasons": [
+            "Tests passed successfully"
+          ]
+        }
+      }
+    }
+  },
+  "testing": {
+    "success": true,
+    "output": "All tests passed!",
+    "error": null,
+    "metadata": {}
+  },
+  "metadata": {
+    "input_file": "DafnyBench/dataset/ground_truth/dafny-programs_tmp_tmpcwodh6qh_src_expt.dfy",
+    "output_dir": "batch_results/converted/dafny-programs_cwodh6qh_src_expt",
+    "test_dir": "batch_results/converted/dafny-programs_cwodh6qh_src_expt"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "batch_name": "test_batch_2_controlled",
+  "last_updated": "2025-07-22T15:22:10.322736",
+  "items": [
+    {
+      "input_file": "DafnyBench/dataset/ground_truth/dafny-synthesis_task_id_477.dfy",
+      "output_dir": "batch_results/converted/dafny-synthesis_task_id_477",
+      "status": "failed",
+      "conversion_score": null,
+      "validation_score": null,
+      "test_success": null,
+      "error_message": "name 'total_score' is not defined",
+      "start_time": "2025-07-22T15:19:48.641342",
+      "end_time": "2025-07-22T15:21:08.874992",
+      "retry_count": 1,
+      "notes": "Conversion failed"
+    },
+    {
+      "input_file": "DafnyBench/dataset/ground_truth/dafny-programs_tmp_tmpcwodh6qh_src_expt.dfy",
+      "output_dir": "batch_results/converted/dafny-programs_cwodh6qh_src_expt",
+      "status": "failed",
+      "conversion_score": null,
+      "validation_score": null,
+      "test_success": null,
+      "error_message": "name 'total_score' is not defined",
+      "start_time": "2025-07-22T15:21:08.875502",
+      "end_time": "2025-07-22T15:22:10.322724",
+      "retry_count": 1,
+      "notes": "Conversion failed"
+    }
+  ]
+}
